@@ -1,0 +1,13 @@
+data/
+.venv/
+__pycache__/
+*.pyc
+.DS_Store
+data.csv
+sample.csv
+test.ipynb
+Weekly_Project_NLP_CLI.md
+*.pkl
+*.pt
+*.h5
+*.joblib

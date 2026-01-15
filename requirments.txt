@@ -1,0 +1,13 @@
+pandas
+plotly
+matplotlib
+wordcloud
+kaleido
+nltk
+torch
+stanza
+scikit-learn
+model2vec
+transformers
+gensim
+google-genai
