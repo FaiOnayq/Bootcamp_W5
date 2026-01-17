@@ -12,7 +12,22 @@ This tool handles the complete Arabic NLP workflow:
 No notebooks. No complexity. Just results.
 
 ## Quick Start
+Clone the repo:
+```bash
+git clone https://github.com/FaiOnayq/Bootcamp_W5.git
+cd NLO-CLI-TOOL
+```
+Install dependencies:
+```bash
+uv venv -p 3.11
+uv pip install -r requirements.txt
+```
+Run the CLI via:
 
+```bash
+uv run main.py --help
+```
+Run code:
 ```bash
 # Full pipeline in one command
 uv run main.py pipeline `
@@ -79,24 +94,6 @@ uv run main.py generate `
   --class_name "sports" `
   --count 10 `
   --output generated.csv
-```
----
-
-## Installation
-
-Clone the repo:
-```bash
-git clone https://github.com/FaiOnayq/Bootcamp_W5.git
-cd NLO-CLI-TOOL
-```
-Install dependencies:
-```bash
-uv sync
-```
-Run the CLI via:
-
-```bash
-uv run main.py --help
 ```
 
 
