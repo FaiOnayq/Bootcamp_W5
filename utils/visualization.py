@@ -17,7 +17,7 @@ import plotly.graph_objects as go
 import plotly.offline as pyo
 from pathlib import Path
 
-def plot_distribution(df, label_col, plot_type='pie', output_path='outputs/visualizations/distribution.png'):
+def plot_distribution(df, label_col, plot_type='pie', output_path='outputs/'):
     """
     Plot class distribution using Plotly
     
@@ -31,6 +31,7 @@ def plot_distribution(df, label_col, plot_type='pie', output_path='outputs/visua
         Path to saved plot
     """
     Path(output_path).parent.mkdir(parents=True, exist_ok=True)
+    output_path = output_path + '/class_distribution.png'
     
     counts = df[label_col].value_counts().reset_index()
     counts.columns = ['Class', 'Count']
@@ -179,7 +180,7 @@ def plot_distribution(df, label_col, plot_type='pie', output_path='outputs/visua
     
     return output_path
 
-def plot_histogram(lengths, unit='words', output_path='outputs/visualizations/histogram.png'):
+def plot_histogram(lengths, unit='words', output_path='outputs'):
     """
     Plot text length histogram using Plotly
 
@@ -192,7 +193,7 @@ def plot_histogram(lengths, unit='words', output_path='outputs/visualizations/hi
         Path to saved plot
     """
     Path(output_path).parent.mkdir(parents=True, exist_ok=True)
-
+    output_path = output_path + '/histogram.png'
     # Create histogram
     fig = go.Figure()
 

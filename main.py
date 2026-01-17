@@ -25,21 +25,21 @@ def main():
     dist_parser.add_argument('--csv_path', required=True, help='Path to CSV file')
     dist_parser.add_argument('--label_col', required=True, help='Label column name')
     dist_parser.add_argument('--plot_type', default='pie', choices=['pie', 'bar'], help='Chart type')
-    dist_parser.add_argument('--output', default='outputs/visualizations/distribution.png', help='Output path')
+    dist_parser.add_argument('--output', default='outputs', help='Output path')
     
     # EDA histogram command
     hist_parser = eda_subparsers.add_parser('histogram', help='Generate text length histogram')
     hist_parser.add_argument('--csv_path', required=True, help='Path to CSV file')
     hist_parser.add_argument('--text_col', required=True, help='Text column name')
     hist_parser.add_argument('--unit', default='words', choices=['words', 'chars'], help='Count unit')
-    hist_parser.add_argument('--output', default='outputs/visualizations/histogram.png', help='Output path')
+    hist_parser.add_argument('--output', default='outputs', help='Output path')
     
     # EDA wordcloud command
     wc_parser = eda_subparsers.add_parser('wordcloud', help='Generate word cloud visualization')
     wc_parser.add_argument('--csv_path', required=True, help='Path to CSV file')
     wc_parser.add_argument('--text_col', required=True, help='Text column name')
     wc_parser.add_argument('--label_col', required=True, help='Label column (for per-class wordclouds)')
-    wc_parser.add_argument('--output', default='outputs/visualizations', help='Output path')
+    wc_parser.add_argument('--output', default='outputs/', help='Output path')
     
     # EDA top words in class
     topwords_parser = eda_subparsers.add_parser('top-words', help='Analyze most frequent words per class')
@@ -47,7 +47,7 @@ def main():
     topwords_parser.add_argument('--text_col', required=True, help='Text column name')
     topwords_parser.add_argument('--label_col', required=True, help='Label column name')
     topwords_parser.add_argument('--top_n', type=int, default=20, help='Number of top words to display per class (default: 20)')
-    topwords_parser.add_argument('--output', default='outputs/visualizations', help='Output directory path')
+    topwords_parser.add_argument('--output', default='outputs/', help='Output directory path')
 
     # For ngrams_per_class function
     ngrams_parser = eda_subparsers.add_parser('ngrams', help='Analyze n-grams per class')
@@ -56,13 +56,13 @@ def main():
     ngrams_parser.add_argument('--label_col', required=True, help='Label column name')
     ngrams_parser.add_argument('--n', type=int, default=2, choices=[2, 3], help='N-gram size (2 for bigrams, 3 for trigrams, default: 2)')
     ngrams_parser.add_argument('--top_n', type=int, default=15, help='Number of top n-grams to display per class (default: 15)')
-    ngrams_parser.add_argument('--output', default='outputs/visualizations', help='Output directory path')
+    ngrams_parser.add_argument('--output', default='outputs/', help='Output directory path')
     
     # text statisc
     ngrams_parser = eda_subparsers.add_parser('statista', help='Analyze text statisc')
     ngrams_parser.add_argument('--csv_path', required=True, help='Path to CSV file')
     ngrams_parser.add_argument('--text_col', required=True, help='Text column name')
-    ngrams_parser.add_argument('--output', default='outputs/visualizations/statista.txt', help='Output directory path')
+    ngrams_parser.add_argument('--output', default='outputs/statista.txt', help='Output directory path')
     
     
     # Preprocessing command placeholder

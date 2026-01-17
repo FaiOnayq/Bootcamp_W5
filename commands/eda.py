@@ -61,14 +61,14 @@ def histogram(args):
     output_path = plot_histogram(lengths, args.unit, args.output)
     
     # Print statistics
-    print(f"\n📈 Text Length Statistics ({args.unit}):")
+    print(f"\nText Length Statistics ({args.unit}):")
     print(f"  Mean:   {lengths.mean():.2f}")
     print(f"  Median: {lengths.median():.2f}")
     print(f"  Std:    {lengths.std():.2f}")
     print(f"  Min:    {lengths.min()}")
     print(f"  Max:    {lengths.max()}")
     
-    print(f"\n✅ Histogram saved to: {output_path}")
+    print(f"\nHistogram saved to: {output_path}")
 
 def wordcloud(args):
     """
@@ -77,19 +77,19 @@ def wordcloud(args):
     Example:
         python main.py eda wordcloud --csv_path data.csv --text_col description
     """
-    print(f"☁️ Generating word cloud from {args.csv_path}...")
+    print(f"Generating word cloud from {args.csv_path}...")
     
     # Load data
     df = load_csv(args.csv_path)
     
     if args.text_col not in df.columns:
-        print(f"❌ Error: Column '{args.text_col}' not found in CSV", file=sys.stderr)
+        print(f"Error: Column '{args.text_col}' not found in CSV", file=sys.stderr)
         return
     
     # Generate word cloud(s)
     output_path = generate_wordcloud(df, args.text_col, args.label_col, args.output)
     
-    print(f"\n✅ Word cloud saved to: {output_path}")
+    print(f"\nWord cloud saved to: {output_path}")
 
 def top_words(args):
     """
