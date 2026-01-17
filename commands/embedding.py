@@ -84,13 +84,14 @@ def tfidf_cmd(args):
 
 def model2vec_cmd(args):
     print(f"Creating Model2Vec embeddings from {args.csv_path}...")
-    print(f"   Using model: {args.model}")
+    model = "JadwalAlmaa/model2vec-ARBERTv2"
+    print(f"   Using model: {model}")
 
     df = _load_and_check(args.csv_path, args.text_col)
-    vectors = create_model2vec_embeddings(df[args.text_col].tolist(), args.model)
+    vectors = create_model2vec_embeddings(df[args.text_col].tolist(), model)
 
     _save_pickle(
-        {'vectors': vectors, 'model_name': args.model},
+        {'vectors': vectors, 'model_name': model},
         args.output
     )
 
@@ -100,13 +101,14 @@ def model2vec_cmd(args):
 
 def bert_cmd(args):
     print(f"Creating BERT embeddings from {args.csv_path}...")
-    print(f"   Using model: {args.model}")
+    model = "aubmindlab/bert-base-arabertv2"
+    print(f"   Using model: {model}")
 
     df = _load_and_check(args.csv_path, args.text_col)
-    vectors = create_bert_embeddings(df[args.text_col].tolist(), args.model)
+    vectors = create_bert_embeddings(df[args.text_col].tolist(), model)
 
     _save_pickle(
-        {'vectors': vectors, 'model_name': args.model},
+        {'vectors': vectors, 'model_name': model},
         args.output
     )
 

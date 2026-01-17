@@ -84,9 +84,6 @@ def plot_distribution(df, label_col, plot_type='pie', output_path='outputs/visua
     
     fig.write_image(output_path, width=1200, height=800)
     
-    # Save as HTML for interactivity
-    fig.write_html(output_path.replace('.png', '.html'))
-    
     return output_path
 
 # def plot_histogram(lengths, unit='words', output_path='outputs/visualizations/histogram.html'):
@@ -237,9 +234,7 @@ def plot_histogram(lengths, unit='words', output_path='outputs/visualizations/hi
 
     fig.write_image(output_path, width=1200, height=800)
     
-    # Save as HTML for interactivity
-    fig.write_html(output_path.replace('.png', '.html'))
-    
+
     return output_path
 
 def generate_wordcloud(df, text_col, label_col, output_path='outputs/visualizations/'):

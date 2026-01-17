@@ -19,6 +19,9 @@ from utils.embeddings import (
     create_word2vec_embeddings,
     create_fasttext_embeddings
 )
+from utils.visualization import plot_distribution, plot_histogram, generate_wordcloud
+from utils.arabic_text import get_text_stats
+
 
 
 from utils.models import train_models, parse_model_specs
@@ -38,7 +41,7 @@ def pipeline_main(args):
     
     report_metadata = {
         'dataset': Path(args.csv_path).name,
-        'embedding': args.embedding.upper(),
+        'embedding': args.embedding,
         'label_column': args.label_col,
         'test_size': args.test_size,
         'models': args.training,
@@ -62,32 +65,45 @@ def pipeline_main(args):
 
     print(f"   Total samples: {len(df)}")
     print(f"   Classes: {df[args.label_col].nunique()}")
+    
+    # -----------------EDA ----------------- #
+    print(f"\nPerforming EDA...")
+    plot_distribution(df, args.label_col,"pie", output_dir / "visualizations" / "class_distribution.png")
+    print(f"   Class distribution plot saved to: {output_dir / 'visualizations' / 'class_distribution.png'}")
+    lengths = df[args.text_col].apply(lambda x: len(str(x)) if pd.notna(x) else 0)
+    plot_histogram(lengths, 'chars', output_dir / "visualizations" / "text_length_histogram.png")
+    print(f"   Text length histogram saved to: {output_dir / 'visualizations' / 'text_length_histogram.png'}")  
+    dict = get_text_stats(df, args.text_col)
+    with open(output_dir/"stats.txt", 'w') as file:
+        for key, value in dict.items():
+            file.write(f"{key}: {value}\n")
+    print(f"   statista saved into: {output_dir/'stats.txt'}")
 
     # ---------------- PREPROCESSING ---------------- #
     print(f"\nPreprocessing (steps: {args.preprocessing})...")
     steps = args.preprocessing.split(',')
 
     if 'remove' in steps or 'all' in steps:
-        print("   [1/4] Removing noise...")
+        print("   1. Removing noise...")
         df[args.text_col] = df[args.text_col].apply(
             lambda x: remove_arabic_noise(str(x) if pd.notna(x) else '', 'all')
         )
 
     if 'stopwords' in steps or 'all' in steps:
-        print("   [2/4] Removing stopwords...")
+        print("   2. Removing stopwords...")
         df[args.text_col] = df[args.text_col].apply(
-            lambda x: remove_stopwords(str(x) if pd.notna(x) else '',args.sw_path, 'ar')
+            lambda x: remove_stopwords(str(x) if pd.notna(x) else '',args.sw_path)
         )
 
     if 'replace' in steps or 'all' in steps:
-        print("   [3/4] Normalizing text...")
+        print("   3. Normalizing text...")
         df[args.text_col] = df[args.text_col].apply(
             lambda x: normalize_arabic(str(x) if pd.notna(x) else '')
         )
     if 'stem' in steps or 'all' in steps:
-        print("   [4/4] Stemming text...")
+        print("   4. Stemming text...")
         df[args.text_col] = df[args.text_col].apply(
-            lambda x: stem_text(str(x) if pd.notna(x) else '', 'ar', args.stemmer)
+            lambda x: stem_text(str(x) if pd.notna(x) else '', args.stemmer)
         )
 
     preprocessed_path = output_dir / "preprocessed_data.csv"
@@ -115,26 +131,24 @@ def pipeline_main(args):
         }
 
     elif args.embedding == 'model2vec':
-        X = create_model2vec_embeddings(texts, args.model)
+        X = create_model2vec_embeddings(texts)
 
         embedding_meta = {
             'method': 'model2vec',
-            'model_name': args.model
         }
 
     elif args.embedding == 'bert':
-        X = create_bert_embeddings(texts, args.model)
+        X = create_bert_embeddings(texts)
 
         embedding_meta = {
             'method': 'bert',
-            'model_name': args.model
         }
 
     elif args.embedding == 'word2vec':
         X, model = create_word2vec_embeddings(
             texts,
-            vector_size=args.vector_size,
-            window=args.window
+            vector_size=100,
+            window=5
         )
 
         embedding_meta = {
@@ -145,8 +159,8 @@ def pipeline_main(args):
     elif args.embedding == 'fasttext':
         X, model = create_fasttext_embeddings(
             texts,
-            vector_size=args.vector_size,
-            window=args.window
+            vector_size=100,
+            window=5
         )
 
         embedding_meta = {

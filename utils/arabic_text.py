@@ -77,13 +77,12 @@ def remove_arabic_noise(text, remove_types='all'):
     
     return text
 
-def remove_stopwords(text, sw_path, language='ar'):
+def remove_stopwords(text, sw_path):
     """
     Remove stopwords from text
     
     Args:
         text: Input text string
-        language: 'ar', 'en', or 'auto'
     
     Returns:
         Text without stopwords
@@ -95,14 +94,8 @@ def remove_stopwords(text, sw_path, language='ar'):
         ARABIC_STOPWORDS = {line.strip() for line in f}
     words = text.split()
     
-    if language == 'ar':
-        stopwords = ARABIC_STOPWORDS
-    elif language == 'en':
-        stopwords = ENGLISH_STOPWORDS
-    elif language == 'auto':
-        stopwords = ARABIC_STOPWORDS | ENGLISH_STOPWORDS
-    else:
-        stopwords = set()
+    stopwords = ARABIC_STOPWORDS
+
     
     filtered_words = [word for word in words if word not in stopwords]
     
@@ -173,11 +166,10 @@ def get_text_stats(df, column_name):
         'max_chars': np.max(char_counts)
     }
 
-def stem_text(text, language='ar', stemmer='snowball'):
+def stem_text(text, stemmer='snowball'):
     """
     Args:
         text: Input text string
-        language: Language code
         stemmer: 'snowball' or 'isri'
     
     Returns:
@@ -187,21 +179,17 @@ def stem_text(text, language='ar', stemmer='snowball'):
         return ''
     
     try:
-        if language == 'ar':
-            if stemmer == 'isri':
-                from nltk.stem.isri import ISRIStemmer
-                stemmer_obj = ISRIStemmer()
-            elif stemmer == "snowball":
-                from nltk.stem.snowball import ArabicStemmer
-                stemmer_obj = ArabicStemmer()
-            else:
-                print("Error: stemmer name is unknown")
-                print("Available stemmer: isri, snowball")
-                
+        if stemmer == 'isri':
+            from nltk.stem.isri import ISRIStemmer
+            stemmer_obj = ISRIStemmer()
+        elif stemmer == "snowball":
+            from nltk.stem.snowball import ArabicStemmer
+            stemmer_obj = ArabicStemmer()
         else:
-            from nltk.stem.snowball import SnowballStemmer
-            stemmer_obj = SnowballStemmer(language)
-        
+            print("Error: stemmer name is unknown")
+            print("Available stemmer: isri, snowball")
+            
+
         words = text.split()
         stemmed = [stemmer_obj.stem(word) for word in words]
         return ' '.join(stemmed)
@@ -210,11 +198,10 @@ def stem_text(text, language='ar', stemmer='snowball'):
         print("Warning: NLTK not installed. Returning original text.")
         return text
 
-def lemmatize_text(text, language='ar'):
+def lemmatize_text(text):
     """    
     Args:
         text: Input text string
-        language: Language code
     
     Returns:
         Lemmatized text
@@ -223,24 +210,17 @@ def lemmatize_text(text, language='ar'):
         return ''
     
     try:
-        if language == 'ar':
-            nlp = get_ar_pipeline()
-            doc = nlp(text)
-            lemmas = []
+        nlp = get_ar_pipeline()
+        doc = nlp(text)
+        lemmas = []
 
-            for sent in doc.sentences:
-                for word in sent.words:
-                    lemmas.append(word.lemma)
+        for sent in doc.sentences:
+            for word in sent.words:
+                lemmas.append(word.lemma)
 
-            text = " ".join(lemmas)
-            return ARABIC_TASHKEEL.sub('', text)
-        else:
-            # Use spacy for other languages
-            import spacy
-            nlp = spacy.load(f'{language}_core_web_sm')
-            doc = nlp(text)
-            return ' '.join([token.lemma_ for token in doc])
-    
+        text = " ".join(lemmas)
+        return ARABIC_TASHKEEL.sub('', text)
+
     except ImportError:
         print("Warning: Required library not installed. Returning original text.")
         return text

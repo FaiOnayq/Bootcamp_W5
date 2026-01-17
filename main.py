@@ -6,7 +6,6 @@ from commands.embedding import embed_main
 from commands.training import train_main
 from commands.pipeline import pipeline_main
 from commands.generate import generate_main
-#from commands.augment import augment_main
 
 def main():
     parser = argparse.ArgumentParser(
@@ -65,13 +64,6 @@ def main():
     ngrams_parser.add_argument('--text_col', required=True, help='Text column name')
     ngrams_parser.add_argument('--output', default='outputs/visualizations/statista.txt', help='Output directory path')
     
-    # EDA remove-outliers command
-    outlier_parser = eda_subparsers.add_parser('remove-outliers', help='Remove statistical outliers based on text length')
-    outlier_parser.add_argument('--csv_path', required=True, help='Path to CSV file')
-    outlier_parser.add_argument('--text_col', required=True, help='Text column name')
-    outlier_parser.add_argument('--method', default='iqr', choices=['iqr', 'zscore'], help='Outlier detection method')
-    outlier_parser.add_argument('--output', required=True, help='Output CSV path')
-    
     
     # Preprocessing command placeholder
     # Preprocessing command
@@ -91,7 +83,6 @@ def main():
     stop_p.add_argument('--text_col', required=True)
     stop_p.add_argument('--sw_path', default="./assets/stopwords.txt", help="Path to text file of stopwords")
     stop_p.add_argument('--output', required=True)
-    stop_p.add_argument('--language', default='ar', choices=['ar', 'en', 'auto'])
 
     # replace
     replace_p = preprocess_subparsers.add_parser('replace', help='Normalize Arabic text')
@@ -107,14 +98,12 @@ def main():
     all_p.add_argument('--output', required=True)
     all_p.add_argument('--stemmer', default='snowball', choices=['snowball', 'isri'])
     all_p.add_argument('--remove', default='all')
-    all_p.add_argument('--language', default='ar', choices=['ar', 'en', 'auto'])
 
     # stem
     stem_p = preprocess_subparsers.add_parser('stem', help='Apply stemming')
     stem_p.add_argument('--csv_path', required=True)
     stem_p.add_argument('--text_col', required=True)
     stem_p.add_argument('--output', required=True)
-    stem_p.add_argument('--language', default='ar')
     stem_p.add_argument('--stemmer', default='snowball', choices=['snowball', 'isri'])
 
     # lemmatize
@@ -122,7 +111,6 @@ def main():
     lemma_p.add_argument('--csv_path', required=True)
     lemma_p.add_argument('--text_col', required=True)
     lemma_p.add_argument('--output', required=True)
-    lemma_p.add_argument('--language', default='ar')
     
         
     # Embedding command placeholder
@@ -141,14 +129,12 @@ def main():
     m2v_p = embed_subparsers.add_parser('model2vec', help='Model2Vec embeddings')
     m2v_p.add_argument('--csv_path', required=True)
     m2v_p.add_argument('--text_col', required=True)
-    m2v_p.add_argument('--model', default='JadwalAlmaa/model2vec-ARBERTv2')
     m2v_p.add_argument('--output', required=True)
 
     # bert
     bert_p = embed_subparsers.add_parser('bert', help='BERT embeddings')
     bert_p.add_argument('--csv_path', required=True)
     bert_p.add_argument('--text_col', required=True)
-    bert_p.add_argument('--model', default='aubmindlab/bert-base-arabertv2')
     bert_p.add_argument('--output', required=True)
 
     # word2vec
@@ -186,8 +172,8 @@ def main():
     pipeline_parser.add_argument('--label_col', required=True, help='Label column name')
     pipeline_parser.add_argument(
         '--preprocessing',
-        default='remove,stopwords,replace',
-        help='Preprocessing steps (comma-separated)'
+        default='all',
+        help='Preprocessing steps (comma-separated)[remove,stopwords,replace,stem,lemmatize,all]'
     )
     pipeline_parser.add_argument('--sw_path', default="./assets/stopwords.txt", help="Path to text file of stopwords")
     pipeline_parser.add_argument('--stemmer', default='snowball', choices=['snowball', 'isri'])
@@ -201,6 +187,7 @@ def main():
     pipeline_parser.add_argument('--ngram_range', default='1,1')
     pipeline_parser.add_argument('--max_features', type=int, default=5000)
 
+
     pipeline_parser.add_argument(
         '--training',
         default='knn,lr,rf',
@@ -212,23 +199,13 @@ def main():
     # generate
     gen_parser = subparsers.add_parser('generate', help='Generate synthetic data')
     gen_parser.add_argument('--model', default='gemini', choices=['gemini', 'openai', 'local'])
-    gen_parser.add_argument('--api_key')
+    gen_parser.add_argument('--api_key', required=True)
     gen_parser.add_argument('--class_name', required=True)
     gen_parser.add_argument('--count', type=int, default=100)
     gen_parser.add_argument('--prompt')
     gen_parser.add_argument('--output', required=True)
     gen_parser.add_argument('--temperature', type=float, default=0.9)
-    gen_parser.add_argument('--append', action='store_true')
-
-    # augment
-    aug_parser = subparsers.add_parser('augment', help='Augment dataset')
-    aug_parser.add_argument('--input_csv', required=True)
-    aug_parser.add_argument('--text_col', required=True)
-    aug_parser.add_argument('--label_col', required=True)
-    aug_parser.add_argument('--model', default='gemini', choices=['gemini', 'openai'])
-    aug_parser.add_argument('--api_key')
-    aug_parser.add_argument('--samples_per_class', type=int, default=50)
-    aug_parser.add_argument('--output', required=True)
+    gen_parser.add_argument('--append', default=True,  help='Append to existing file if it exists')
 
     
     args = parser.parse_args()
@@ -245,8 +222,6 @@ def main():
         pipeline_main(args)
     elif args.command == 'generate':
         generate_main(args)
-    elif args.command == 'augment':
-        augment_main(args)
     else:
         parser.print_help()
         sys.exit(1)

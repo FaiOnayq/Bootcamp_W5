@@ -5,7 +5,6 @@ from pathlib import Path
 from utils.data_handler import load_csv
 from utils.visualization import plot_distribution, plot_histogram, generate_wordcloud
 from utils.visualization import plot_top_words_per_class
-from utils.visualization import plot_ngrams_per_class
 from utils.arabic_text import get_text_stats
 
 def distribution(args):
@@ -92,55 +91,6 @@ def wordcloud(args):
     
     print(f"\n✅ Word cloud saved to: {output_path}")
 
-def remove_outliers(args):
-    """
-    Remove statistical outliers based on text length (BONUS)
-    
-    Example:
-        python main.py eda remove-outliers --csv_path data.csv --text_col description --output clean.csv
-    """
-    print(f"Detecting outliers in {args.csv_path}...")
-    
-    # Load data
-    df = load_csv(args.csv_path)
-    
-    if args.text_col not in df.columns:
-        print(f"Error: Column '{args.text_col}' not found in CSV", file=sys.stderr)
-        return
-    
-    # Calculate text lengths
-    lengths = df[args.text_col].apply(lambda x: len(str(x).split()) if pd.notna(x) else 0)
-    
-    original_count = len(df)
-    
-    if args.method == 'iqr':
-        Q1 = lengths.quantile(0.25)
-        Q3 = lengths.quantile(0.75)
-        IQR = Q3 - Q1
-        lower_bound = Q1 - 1.5 * IQR
-        upper_bound = Q3 + 1.5 * IQR
-        mask = (lengths >= lower_bound) & (lengths <= upper_bound)
-    else:  # zscore
-        mean = lengths.mean()
-        std = lengths.std()
-        z_scores = (lengths - mean) / std
-        mask = abs(z_scores) < 3
-    
-    df_clean = df[mask]
-    removed_count = original_count - len(df_clean)
-    
-    # Save cleaned data
-    Path(args.output).parent.mkdir(parents=True, exist_ok=True)
-    df_clean.to_csv(args.output, index=False)
-    
-    print(f"\nOutlier Removal Results:")
-    print(f"  Original samples: {original_count}")
-    print(f"  Removed samples:  {removed_count}")
-    print(f"  Remaining samples: {len(df_clean)}")
-    print(f"  Removal rate: {(removed_count/original_count)*100:.2f}%")
-    
-    print(f"\n✅ Clean data saved to: {args.output}")
-
 def top_words(args):
     """
     Analyze most frequent words per class
@@ -158,16 +108,6 @@ def top_words(args):
     
     output_path = plot_top_words_per_class(df, args.text_col, args.label_col, args.top_n, args.output)
     print(f"\nTop words visualization saved to: {output_path}")
-
-def ngrams_per_class(args):
-    df = load_csv(args.csv_path)
-    
-    if args.text_col not in df.columns or args.label_col not in df.columns:
-        print(f"Error: Required columns not found", err=True)
-        return
-    
-    output_path = plot_ngrams_per_class(df, args.text_col, args.label_col, args.output)
-    print(f"\ngrams per class saved to: {output_path}")
 
 def statista(args):
     df = load_csv(args.csv_path)

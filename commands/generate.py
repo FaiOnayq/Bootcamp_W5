@@ -50,8 +50,9 @@ def generate_main(args):
     # ---------------- SAVE ---------------- #
     output_path = Path(args.output)
     output_path.parent.mkdir(parents=True, exist_ok=True)
-
+    print(args.append)
     if args.append and output_path.exists():
+        print(args.append)
         existing = pd.read_csv(output_path)
         df = pd.concat([existing, df], ignore_index=True)
         print("   Appending to existing file...")

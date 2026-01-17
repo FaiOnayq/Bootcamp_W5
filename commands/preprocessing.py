@@ -61,7 +61,7 @@ def stopwords_cmd(args):
 
     before = df[args.text_col].astype(str).str.split().str.len()
     df[args.text_col] = df[args.text_col].apply(
-        lambda x: remove_stopwords(str(x), args.sw_path, args.language)
+        lambda x: remove_stopwords(str(x), args.sw_path)
     )
     after = df[args.text_col].astype(str).str.split().str.len()
 
@@ -94,7 +94,7 @@ def all_cmd(args):
 
     print("  [2/4] Removing stopwords...")
     df[args.text_col] = df[args.text_col].apply(
-        lambda x: remove_stopwords(str(x), args.sw_path, args.language)
+        lambda x: remove_stopwords(str(x), args.sw_path)
     )
 
     print("  [3/4] Normalizing text...")
@@ -104,7 +104,7 @@ def all_cmd(args):
     
     print("  [4/4] stemming text...")
     df[args.text_col] = df[args.text_col].apply(
-        lambda x: stem_text(str(x), args.language, args.stemmer)
+        lambda x: stem_text(str(x), args.stemmer)
     )
 
     after = df[args.text_col].astype(str).str.len()
@@ -117,7 +117,7 @@ def stem_cmd(args):
 
     df = _load_and_check(args.csv_path, args.text_col)
     df[args.text_col] = df[args.text_col].apply(
-        lambda x: stem_text(str(x), args.language, args.stemmer)
+        lambda x: stem_text(str(x), args.stemmer)
     )
 
     _save(df, args.output)
@@ -129,7 +129,7 @@ def lemmatize_cmd(args):
 
     df = _load_and_check(args.csv_path, args.text_col)
     df[args.text_col] = df[args.text_col].apply(
-        lambda x: lemmatize_text(str(x), args.language)
+        lambda x: lemmatize_text(str(x))
     )
 
     _save(df, args.output)

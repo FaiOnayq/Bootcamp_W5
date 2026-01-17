@@ -22,7 +22,7 @@ def generate_report(results, dataset_info, output_path, best_model_name):
     
     report.append("## Dataset Information\n")
     report.append(f"- **Dataset file**: {dataset_info.get('dataset_file', 'N/A')}\n")
-    report.append(f"- **Embedding file**: {dataset_info.get('embedding_file', 'N/A')}\n")
+    report.append(f"- **Embedding file**: {dataset_info['metadata']['embedding']}\n")
     report.append(f"- **Total samples**: {dataset_info['total_samples']}\n")
     report.append(f"- **Features**: {dataset_info['features']}\n")
     report.append(f"- **Classes**: {dataset_info['classes']}\n")
