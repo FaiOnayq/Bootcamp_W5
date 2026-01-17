@@ -32,7 +32,7 @@ def generate_main(args):
         sys.exit(1)
 
     if not texts:
-        raise RuntimeError("Failed to generate texts")
+        raise RuntimeError("Failed to generate texts, Try Again")
 
     # ---------------- BUILD DATAFRAME ---------------- #
     records = []

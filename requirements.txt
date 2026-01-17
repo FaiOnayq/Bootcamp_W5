@@ -11,3 +11,5 @@ model2vec
 transformers
 gensim
 google-genai
+arabic_reshaper
+python-bidi
