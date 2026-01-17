@@ -95,6 +95,7 @@ uv run main.py generate `
   --count 10 `
   --output generated.csv
 ```
+To add another class; use same output file!
 
 
 ## EDA Commands
