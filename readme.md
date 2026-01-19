@@ -15,7 +15,7 @@ No notebooks. No complexity. Just results.
 Clone the repo:
 ```bash
 git clone https://github.com/FaiOnayq/Bootcamp_W5.git
-cd NLO-CLI-TOOL
+cd Bootcamp_W5
 ```
 Install dependencies:
 ```bash

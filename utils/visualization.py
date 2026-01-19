@@ -31,7 +31,6 @@ def plot_distribution(df, label_col, plot_type='pie', output_path='outputs/'):
         Path to saved plot
     """
     Path(output_path).parent.mkdir(parents=True, exist_ok=True)
-    output_path = output_path + '/class_distribution.png'
     
     counts = df[label_col].value_counts().reset_index()
     counts.columns = ['Class', 'Count']
@@ -193,7 +192,6 @@ def plot_histogram(lengths, unit='words', output_path='outputs'):
         Path to saved plot
     """
     Path(output_path).parent.mkdir(parents=True, exist_ok=True)
-    output_path = output_path + '/histogram.png'
     # Create histogram
     fig = go.Figure()
 
