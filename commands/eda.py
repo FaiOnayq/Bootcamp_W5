@@ -24,7 +24,8 @@ def distribution(args):
         return
     
     # Generate visualization
-    output_path = plot_distribution(df, args.label_col, args.plot_type, args.output)
+    output_path = output_path + '/class_distribution.png'
+    output_path = plot_distribution(df, args.label_col, args.plot_type, output_path)
     
     # Print statistics
     counts = df[args.label_col].value_counts()
@@ -58,7 +59,8 @@ def histogram(args):
         lengths = df[args.text_col].apply(lambda x: len(str(x)) if pd.notna(x) else 0)
     
     # Generate visualization
-    output_path = plot_histogram(lengths, args.unit, args.output)
+    output_path = output_path + '/class_histogram.png'
+    output_path = plot_histogram(lengths, args.unit, output_path)
     
     # Print statistics
     print(f"\nText Length Statistics ({args.unit}):")
