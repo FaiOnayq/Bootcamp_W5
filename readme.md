@@ -70,7 +70,7 @@ uv run main.py train --csv_path clean.csv --embedding_path vectors.pkl --label_c
   - BERT
   - Model2Vec
 
-- 🤖 **Model Training & Evaluation**
+- **Model Training & Evaluation**
   - Train multiple classifiers in one run
   - - knn – K-Nearest Neighbors
   - - lr – Logistic Regression
